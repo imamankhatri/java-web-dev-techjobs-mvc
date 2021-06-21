@@ -1,14 +1,12 @@
 package org.launchcode.javawebdevtechjobsmvc.controllers;
 
-import org.launchcode.javawebdevtechjobsmvc.models.Job;
+import static org.launchcode.javawebdevtechjobsmvc.controllers.ListController.columnChoices;
+
 import org.launchcode.javawebdevtechjobsmvc.models.JobData;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
-
-import static org.launchcode.javawebdevtechjobsmvc.controllers.ListController.columnChoices;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * Created by LaunchCode
@@ -28,7 +26,11 @@ public class SearchController {
     @RequestMapping(value = "results", method = RequestMethod.POST)
     public String displaySearchResults(Model model, String searchType, String searchTerm) {
         model.addAttribute("columns", columnChoices);
-        model.addAttribute("jobs", searchTerm.equals("all") ? JobData.findAll() : JobData.findByColumnAndValue(searchType, searchTerm));
+        if (searchTerm.equals("all")) {
+            model.addAttribute("jobs", JobData.findAll());
+        } else {
+            model.addAttribute("jobs", JobData.findByColumnAndValue(searchType, searchTerm));
+        }
         return "search";
     }
 }
